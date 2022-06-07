@@ -9,25 +9,30 @@ class GraphqlService {
 
   final String _baseUrl =
       env?.baseUrl ?? 'https://rickandmortyapi.com/graphql/';
-  GraphQLClient? client;
+  late GraphQLClient client;
 
-  void init({String? token}) {
+  void init() {
     HttpLink httpLink = HttpLink(
       _baseUrl,
       //defaultHeaders: token != null ? {'Authorization': 'Bearer $token'} : {},
     );
 
-    AuthLink authLink = AuthLink(
-      getToken: () async => 'Bearer $token',
-      //getToken: () => 'Bearer $token',
-    );
+    // AuthLink authLink = AuthLink(
+    //   getToken: () async => 'Bearer $token',
+    // );
 
-    Link link = authLink.concat(httpLink);
+    // Link link = authLink.concat(httpLink);
+
+    // client = GraphQLClient(
+    //   /// **NOTE** The default store is the InMemoryStore, which does NOT persist to disk
+    //   cache: InMemoryCache(),
+    //   link: token != null ? link : httpLink,
+    // );
 
     client = GraphQLClient(
       /// **NOTE** The default store is the InMemoryStore, which does NOT persist to disk
       cache: GraphQLCache(),
-      link: token != null ? link : httpLink,
+      link: httpLink,
     );
   }
 

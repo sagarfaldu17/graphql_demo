@@ -15,22 +15,22 @@ class GraphqlAuthService implements AuthService {
   String? currentProfileToken;
   String? currentUserId;
 
-  GraphQLClient? getClient([String? token]) {
+  GraphQLClient? getClient() {
     GraphqlService graphqlService = GraphqlService();
-    graphqlService.init(token: token);
+    graphqlService.init();
     return graphqlService.client;
   }
 
   @override
   Future<List<CharacterModel>?> getCharacterList() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? profileToken = prefs.getString('profileToken');
-    GraphQLClient? client = getClient(profileToken);
+    // final prefs = await SharedPreferences.getInstance();
+    // String? profileToken = prefs.getString('profileToken');
+    GraphQLClient? client = getClient();
     if (client != null) {
 
-        String queryStr = '''
+        String queryStr = r'''
        query {
-          characters(page: 2) {
+          characters(page: 1) {
              results {
                 id
                 name
@@ -46,47 +46,50 @@ class GraphqlAuthService implements AuthService {
 
         QueryResult result = await client.mutate(options);
         if (!result.hasException) {
-          Map<String, dynamic>? data = result.data;
-          if (data != null) {
+          print('result.data: ${result.data}');
+          // Map<String, dynamic>? data = result.data;
 
-            List<dynamic>? listOfLedgerBalancePointsHistoryMap = data['pointsHistory'];
-            print('listOfLedgerBalancePointsHistoryMap: $listOfLedgerBalancePointsHistoryMap');
-            List<LedgerBalancePointsHistory> finalListOfLedgerBalancePointsHistoryModels = [];
-
-            if (listOfLedgerBalancePointsHistoryMap != null) {
-              for (var eachMapElement in listOfLedgerBalancePointsHistoryMap) {
-
-                String? dateAdded = DateFormat.yMd().format(DateTime.parse(eachMapElement['dateAdded'] ?? "${DateTime.now().toUtc().toString()}"));
-                String? finalPoints = '';
-                String? storeName = '';
-                double? points = eachMapElement['point'];
-
-                if (eachMapElement['pointClassification'] == 'DEPOSIT') {
-                  finalPoints = '$points';
-                  storeName = eachMapElement['storeName'] ?? 'Evaluation Deposit';
-                } else {
-                  finalPoints = '- $points';
-                  storeName = eachMapElement['storeName'] ?? 'Store Withdrawal';
-                }
-                var ledgerBalancePointsHistoryModel = LedgerBalancePointsHistory(id: eachMapElement['id'], challengeId: eachMapElement['challengeId'],
-                    dateAdded: dateAdded, point: finalPoints,
-                    pointClassification: eachMapElement['pointClassification'], profileId: eachMapElement['profileId'],
-                    storeName: storeName, video: eachMapElement['video']);
-
-                finalListOfLedgerBalancePointsHistoryModels.add(ledgerBalancePointsHistoryModel);
-              }
-            }
-
-            return finalListOfLedgerBalancePointsHistoryModels;
-          }
+          // if (data != null) {
+          //
+          //   List<dynamic>? listOfLedgerBalancePointsHistoryMap = data['pointsHistory'];
+          //   print('listOfLedgerBalancePointsHistoryMap: $listOfLedgerBalancePointsHistoryMap');
+          //   List<LedgerBalancePointsHistory> finalListOfLedgerBalancePointsHistoryModels = [];
+          //
+          //   if (listOfLedgerBalancePointsHistoryMap != null) {
+          //     for (var eachMapElement in listOfLedgerBalancePointsHistoryMap) {
+          //
+          //       String? dateAdded = DateFormat.yMd().format(DateTime.parse(eachMapElement['dateAdded'] ?? "${DateTime.now().toUtc().toString()}"));
+          //       String? finalPoints = '';
+          //       String? storeName = '';
+          //       double? points = eachMapElement['point'];
+          //
+          //       if (eachMapElement['pointClassification'] == 'DEPOSIT') {
+          //         finalPoints = '$points';
+          //         storeName = eachMapElement['storeName'] ?? 'Evaluation Deposit';
+          //       } else {
+          //         finalPoints = '- $points';
+          //         storeName = eachMapElement['storeName'] ?? 'Store Withdrawal';
+          //       }
+          //       var ledgerBalancePointsHistoryModel = LedgerBalancePointsHistory(id: eachMapElement['id'], challengeId: eachMapElement['challengeId'],
+          //           dateAdded: dateAdded, point: finalPoints,
+          //           pointClassification: eachMapElement['pointClassification'], profileId: eachMapElement['profileId'],
+          //           storeName: storeName, video: eachMapElement['video']);
+          //
+          //       finalListOfLedgerBalancePointsHistoryModels.add(ledgerBalancePointsHistoryModel);
+          //     }
+          //   }
+          //
+          //   return finalListOfLedgerBalancePointsHistoryModels;
+          // }
         } else {
-          String errorCode = GraphqlService.getErrorCode(result);
-          if (errorCode == 'LS050') {
-            //User don't have any transaction yet.
-            return [];
-          } else {
-            throw errorCode;
-          }
+          print('graphqlErrors: ${result.exception?.graphqlErrors[0]}');
+          // String errorCode = GraphqlService.getErrorCode(result);
+          // if (errorCode == 'LS050') {
+          //   //User don't have any transaction yet.
+          //   return [];
+          // } else {
+          //   throw errorCode;
+          // }
         }
     }
     throw UnimplementedError();
