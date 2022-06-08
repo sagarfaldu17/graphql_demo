@@ -25,11 +25,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # https://pub.dev/packages/json_serializaFble
-  # License: BSD
   json_serializable: ^6.0.1
-  # https://pub.dev/packages/build_runner
-  # License: BSD
   build_runner: ^2.1.2
 
   flutter_lints: ^1.0.0

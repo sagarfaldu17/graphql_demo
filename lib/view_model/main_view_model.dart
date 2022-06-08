@@ -7,11 +7,10 @@ import '../repository/auth_repository.dart';
 class MainViewModel with ChangeNotifier{
   final AuthRepository _authRepository = locator<AuthRepository>();
 
-  List<CharacterModel>? characterList;
+  CharacterListModel? characterModel;
 
   Future<void> getCharacterList() async {
-    characterList = await _authRepository.getCharacterList();
+    characterModel = await _authRepository.getCharacterList();
     notifyListeners();
   }
-
 }

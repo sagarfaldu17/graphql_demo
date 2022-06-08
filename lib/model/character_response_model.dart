@@ -4,6 +4,22 @@ part 'character_response_model.g.dart';
 @JsonSerializable(
   fieldRename: FieldRename.snake,
 )
+class CharacterListModel {
+  CharacterListModel({
+    required this.results,
+  });
+
+  List<CharacterModel> results;
+
+  factory CharacterListModel.fromJson(Map<String, dynamic> json) =>
+      _$CharacterListModelFromJson(json);
+  Map<String, dynamic> toJson() => _$CharacterListModelToJson(this);
+}
+
+
+@JsonSerializable(
+  fieldRename: FieldRename.snake,
+)
 class CharacterModel {
   CharacterModel({
     this.id,

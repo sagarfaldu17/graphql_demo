@@ -11,11 +11,11 @@ class CharacterListWidget extends StatelessWidget {
 
     final _viewModel = Provider.of<MainViewModel>(context, listen: true,);
 
-    return _viewModel.characterList != null ? ListView.builder(
+    return _viewModel.characterModel != null ? ListView.builder(
         shrinkWrap: true,
-        itemCount: _viewModel.characterList?.length,
+        itemCount: _viewModel.characterModel?.results.length,
         itemBuilder: (context, index) {
-          final character = _viewModel.characterList?[index];
+          final character = _viewModel.characterModel?.results[index];
 
           return Card(
             shape: RoundedRectangleBorder(

@@ -22,7 +22,7 @@ class GraphqlAuthService implements AuthService {
   }
 
   @override
-  Future<List<CharacterModel>?> getCharacterList() async {
+  Future<CharacterListModel?> getCharacterList() async {
     // final prefs = await SharedPreferences.getInstance();
     // String? profileToken = prefs.getString('profileToken');
     GraphQLClient? client = getClient();
@@ -47,17 +47,11 @@ class GraphqlAuthService implements AuthService {
         QueryResult result = await client.mutate(options);
         if (!result.hasException) {
           Map<String, dynamic>? data = result.data;
-          List<dynamic> characterListModel = data?['characters']['results'];
-          List<CharacterModel>? finalCharacterListModel = [];
-
-          for (var eachElement in characterListModel) {
-            var characterModel = CharacterModel(id: eachElement['id'], name: eachElement['name'], status: eachElement['status']);
-            finalCharacterListModel.add(characterModel);
-          }
-
-          return finalCharacterListModel;
+          final characterMap = data?['characters'];
+          CharacterListModel characterListModel = CharacterListModel.fromJson(characterMap);
+          return characterListModel;
         } else {
-          print('graphqlErrors: ${result.exception?.graphqlErrors[0]}');
+          print('graphqlErrors: ${result.exception}');
           // String errorCode = GraphqlService.getErrorCode(result);
           // if (errorCode == 'LS050') {
           //   //User don't have any transaction yet.

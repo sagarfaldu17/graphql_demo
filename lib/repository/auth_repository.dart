@@ -8,7 +8,7 @@ class AuthRepository implements AuthBase {
   final AuthService _service = locator<GraphqlAuthService>();
 
   @override
-  Future<List<CharacterModel>?> getCharacterList() async {
+  Future<CharacterListModel?> getCharacterList() async {
     return await _service.getCharacterList();
   }
 }

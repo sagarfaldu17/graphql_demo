@@ -6,6 +6,18 @@ part of 'character_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+CharacterListModel _$CharacterListModelFromJson(Map<String, dynamic> json) =>
+    CharacterListModel(
+      results: (json['results'] as List<dynamic>)
+          .map((e) => CharacterModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$CharacterListModelToJson(CharacterListModel instance) =>
+    <String, dynamic>{
+      'results': instance.results,
+    };
+
 CharacterModel _$CharacterModelFromJson(Map<String, dynamic> json) =>
     CharacterModel(
       id: json['id'] as String?,
