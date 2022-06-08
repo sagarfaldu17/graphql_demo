@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:graphql_demo/env.dart';
-import 'package:graphql_demo/view/main_page.dart';
+import 'package:graphql_demo/view/main/main_page.dart';
 import 'package:provider/provider.dart';
 
 import 'helper/locator.dart';

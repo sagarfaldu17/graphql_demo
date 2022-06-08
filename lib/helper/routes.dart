@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../view/main_page.dart';
+import '../view/main/main_page.dart';
 import '../view_model/main_view_model.dart';
 
 class Routes {

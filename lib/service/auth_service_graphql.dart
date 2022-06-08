@@ -2,8 +2,8 @@ import 'package:graphql/client.dart';
 import 'package:graphql_demo/service/graphql_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/character_response_model.dart';
 import 'base/auth_service.dart';
-import '../model/character_model.dart';
 
 class GraphqlAuthService implements AuthService {
 
@@ -46,41 +46,16 @@ class GraphqlAuthService implements AuthService {
 
         QueryResult result = await client.mutate(options);
         if (!result.hasException) {
-          print('result.data: ${result.data}');
-          // Map<String, dynamic>? data = result.data;
+          Map<String, dynamic>? data = result.data;
+          List<dynamic> characterListModel = data?['characters']['results'];
+          List<CharacterModel>? finalCharacterListModel = [];
 
-          // if (data != null) {
-          //
-          //   List<dynamic>? listOfLedgerBalancePointsHistoryMap = data['pointsHistory'];
-          //   print('listOfLedgerBalancePointsHistoryMap: $listOfLedgerBalancePointsHistoryMap');
-          //   List<LedgerBalancePointsHistory> finalListOfLedgerBalancePointsHistoryModels = [];
-          //
-          //   if (listOfLedgerBalancePointsHistoryMap != null) {
-          //     for (var eachMapElement in listOfLedgerBalancePointsHistoryMap) {
-          //
-          //       String? dateAdded = DateFormat.yMd().format(DateTime.parse(eachMapElement['dateAdded'] ?? "${DateTime.now().toUtc().toString()}"));
-          //       String? finalPoints = '';
-          //       String? storeName = '';
-          //       double? points = eachMapElement['point'];
-          //
-          //       if (eachMapElement['pointClassification'] == 'DEPOSIT') {
-          //         finalPoints = '$points';
-          //         storeName = eachMapElement['storeName'] ?? 'Evaluation Deposit';
-          //       } else {
-          //         finalPoints = '- $points';
-          //         storeName = eachMapElement['storeName'] ?? 'Store Withdrawal';
-          //       }
-          //       var ledgerBalancePointsHistoryModel = LedgerBalancePointsHistory(id: eachMapElement['id'], challengeId: eachMapElement['challengeId'],
-          //           dateAdded: dateAdded, point: finalPoints,
-          //           pointClassification: eachMapElement['pointClassification'], profileId: eachMapElement['profileId'],
-          //           storeName: storeName, video: eachMapElement['video']);
-          //
-          //       finalListOfLedgerBalancePointsHistoryModels.add(ledgerBalancePointsHistoryModel);
-          //     }
-          //   }
-          //
-          //   return finalListOfLedgerBalancePointsHistoryModels;
-          // }
+          for (var eachElement in characterListModel) {
+            var characterModel = CharacterModel(id: eachElement['id'], name: eachElement['name'], status: eachElement['status']);
+            finalCharacterListModel.add(characterModel);
+          }
+
+          return finalCharacterListModel;
         } else {
           print('graphqlErrors: ${result.exception?.graphqlErrors[0]}');
           // String errorCode = GraphqlService.getErrorCode(result);

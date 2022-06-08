@@ -1,7 +1,7 @@
 import '../base/auth_base.dart';
+import '../model/character_response_model.dart';
 import '../service/base/auth_service.dart';
 import '../helper/locator.dart';
-import '../model/character_model.dart';
 import '../service/auth_service_graphql.dart';
 
 class AuthRepository implements AuthBase {
